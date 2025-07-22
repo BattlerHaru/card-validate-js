@@ -1,3 +1,10 @@
+const spanTypeCard = document.getElementById("card-type");
+const inputCardNo = document.getElementById("card-no");
+const inputCardCvv = document.getElementById("card-cvv");
+
+let cardTypeName = "Card Network";
+let cvcSize = 3;
+
 const cardPatterns = {
   visa: {
     // Starts with 4.13, 16, or 19 digits.
@@ -137,4 +144,41 @@ const handleDelimiterBackspaceDelete = (event, delimiterChar) => {
   }
 
   return { isNewValue: false, isNewCursor: false };
+};
+
+const formatCardNumber = (value, cardTypeName) => {
+  switch (cardTypeName) {
+    case cardPatterns.amex.name: // 4-6-5
+      return value.replace(/^(\d{4})(\d{6})(\d{0,5})/, "$1 $2 $3").trim();
+
+    case cardPatterns.dinersClub.name: // 4-6-4
+      if (value.length <= 14) {
+        return value.replace(/^(\d{4})(\d{6})(\d{0,4})/, "$1 $2 $3").trim();
+      }
+
+    default: // 4-4
+      return value.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+  }
+};
+
+const sanitizeNumber = (value, size) => {
+  return String(value).trim().replace(/\D/g, "").slice(0, size);
+  // 19 for 23 with " " format
+  // 4 for 5 with / format
+  // 3-4 for cvv
+};
+
+const updateCardInput = (number) => {
+  const sanitizedValue = sanitizeNumber(number, 19);
+
+  cardTypeName = detectCardType(sanitizedValue);
+
+  cvcSize = cardTypeName === cardPatterns.amex.name ? 4 : 3;
+
+  const formatValue = formatCardNumber(sanitizedValue, cardTypeName);
+
+  spanTypeCard.textContent = cardTypeName;
+  inputCardCvv.placeholder = "*".repeat(cvcSize);
+
+  return formatValue;
 };
