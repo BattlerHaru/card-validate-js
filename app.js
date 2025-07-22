@@ -60,3 +60,40 @@ const cardPatterns = {
     regex: /^220[0-4][0-9]{12,15}$/,
   },
 };
+
+const detectCardType = (number) => {
+  const cards = cardPatterns;
+  for (const key in cards) {
+    if (cards[key].regex.test(number)) {
+      return cards[key].name;
+    }
+  }
+  return cardTypeName;
+};
+
+// only numbers, and others key
+const isKeyAllowed = ({ key, ctrlKey, metaKey }, isCtrl) => {
+  const regexNumber = /[\d]/;
+
+  const allowedKeys = [
+    "Backspace",
+    "Delete",
+    "ArrowLeft",
+    "ArrowRight",
+    "Tab",
+    "Home",
+    "End",
+  ];
+
+  if (isCtrl) {
+    if ((ctrlKey || metaKey) && (key === "v" || key === "V")) {
+      return true;
+    }
+  }
+
+  if (regexNumber.test(key) || allowedKeys.includes(key)) {
+    return true;
+  }
+
+  return false;
+};
