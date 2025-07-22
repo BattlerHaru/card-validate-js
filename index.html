@@ -3,7 +3,106 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Card Validate</title>
   </head>
-  <body></body>
+  <body>
+    <div class="payment">
+      <div class="bg"></div>
+
+      <div class="card">
+        <img src="/chip.webp" alt="chip" class="chip" width="60" height="50" />
+
+        <div class="logo"></div>
+
+        <form autocomplete="off" id="card-form" method="post">
+          <div class="input-box">
+            <span aria-label="Card Type" id="card-type" style="--w: 18ch"
+              >Card Network</span
+            >
+          </div>
+
+          <div class="input-box">
+            <label class="label-custom" for="card-no">Card No.</label>
+            <input
+              aria-label="Credit Card Number"
+              aria-describedby="card-no-error"
+              aria-invalid="false"
+              id="card-no"
+              inputmode="numeric"
+              maxlength="23"
+              minlength="12"
+              name="card-no"
+              pattern="\d{4} \d{4} \d{4} \d{4}(?: \d{3})?"
+              placeholder="0123 4567 8901 2345"
+              style="--w: 23ch"
+              type="text"
+            />
+            <!-- <div class="error-message-container">
+              <p id="card-no-error" class="error-message" aria-live="polite">
+                Woops, Something went wrong
+              </p>
+            </div> -->
+          </div>
+          <div class="input-box">
+            <label class="label-custom" for="cardholder-name"
+              >Card Holder</label
+            >
+            <input
+              aria-label="Cardholder Name"
+              id="cardholder-name"
+              maxlength="20"
+              name="cardholder-name"
+              pattern=""
+              placeholder="Emily Parker"
+              style="--w: 20ch"
+              type="text"
+            />
+          </div>
+          <div
+            class="group-box"
+            role="group"
+            aria-labelledby="expiry-cvv-label"
+          >
+            <span id="expiry-cvv-label" class="sr-only"
+              >Expiration date and CVV</span
+            >
+            <div class="input-box">
+              <label for="card-thru">Valid Thru</label>
+              <input
+                aria-label="Expiration date in MM slash YY format"
+                id="card-thru"
+                inputmode="numeric"
+                maxlength="5"
+                name="card-thru"
+                pattern="^(0[1-9]|1[0-2])\/\d{2}$"
+                placeholder="MM/YY"
+                style="--w: 5ch"
+                type="text"
+              />
+            </div>
+            <div class="input-box">
+              <label for="card-cvv">CVV</label>
+              <input
+                aria-label="Card security code, 3 or 4 digits"
+                id="card-cvv"
+                inputmode="numeric"
+                maxlength="4"
+                minlength="3"
+                name="card-cvv"
+                pattern="^\d{3,4}$"
+                placeholder="***"
+                style="--w: 4ch"
+                type="password"
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <button class="btn" id="btn-accept" form="card-form">
+        Confirm and Pay
+      </button>
+    </div>
+  </body>
 </html>
