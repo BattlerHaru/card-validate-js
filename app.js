@@ -182,3 +182,46 @@ const updateCardInput = (number) => {
 
   return formatValue;
 };
+
+const adjustCursorPos = (
+  selectionStart,
+  rawValue,
+  formattedValue,
+  delimiterChar
+) => {
+  let newCursorPos = selectionStart;
+
+  const rawCount =
+    rawValue.slice(0, selectionStart).split(delimiterChar).length - 1;
+
+  const formattedCount =
+    formattedValue.slice(0, selectionStart).split(delimiterChar).length - 1;
+
+  newCursorPos += formattedCount - rawCount;
+
+  return newCursorPos;
+};
+
+inputCardNo.addEventListener("keydown", (event) => {
+  const keyValidated = isKeyAllowed(event, true);
+  if (!keyValidated) {
+    event.preventDefault();
+    return;
+  }
+
+  if (event.key === "Backspace" || event.key === "Delete") {
+    const { isNewValue, isNewCursor } = handleDelimiterBackspaceDelete(
+      event,
+      " "
+    );
+    if (isNewValue) {
+      const formatValue = updateCardInput(isNewValue);
+
+      event.target.value = formatValue;
+
+      requestAnimationFrame(() => {
+        event.target.setSelectionRange(isNewCursor, isNewCursor);
+      });
+    }
+  }
+});
