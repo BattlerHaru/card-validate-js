@@ -225,3 +225,19 @@ inputCardNo.addEventListener("keydown", (event) => {
     }
   }
 });
+
+inputCardNo.addEventListener("input", (event) => {
+  const rawValue = event.target.value;
+
+  const formatValue = updateCardInput(rawValue);
+
+  const selectionStart = event.target.selectionStart;
+
+  const cursorPos = adjustCursorPos(selectionStart, rawValue, formatValue, " ");
+
+  event.target.value = formatValue;
+
+  requestAnimationFrame(() => {
+    event.target.setSelectionRange(cursorPos, cursorPos);
+  });
+});
