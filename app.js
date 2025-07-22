@@ -97,3 +97,44 @@ const isKeyAllowed = ({ key, ctrlKey, metaKey }, isCtrl) => {
 
   return false;
 };
+
+const handleDelimiterBackspaceDelete = (event, delimiterChar) => {
+  const input = event.target;
+  const { selectionStart, selectionEnd, value } = input;
+  const key = event.key;
+
+  const isPrevCharSpace = value[selectionStart - 1] === delimiterChar;
+  const isNextCharSpace = value[selectionStart] === delimiterChar;
+
+  const hasNoSelection = selectionStart === selectionEnd;
+
+  if (
+    key === "Backspace" &&
+    isPrevCharSpace &&
+    hasNoSelection &&
+    selectionStart > 1
+  ) {
+    event.preventDefault();
+    return {
+      isNewValue:
+        value.slice(0, selectionStart - 2) + value.slice(selectionEnd),
+      isNewCursor: selectionStart - 2,
+    };
+  }
+
+  if (
+    key === "Delete" &&
+    isNextCharSpace &&
+    hasNoSelection &&
+    selectionStart < value.length - 1
+  ) {
+    event.preventDefault();
+    return {
+      isNewValue:
+        value.slice(0, selectionStart) + value.slice(selectionStart + 2),
+      isNewCursor: selectionStart + 1,
+    };
+  }
+
+  return { isNewValue: false, isNewCursor: false };
+};
