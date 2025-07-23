@@ -1,6 +1,7 @@
 const spanTypeCard = document.getElementById("card-type");
 const inputCardNo = document.getElementById("card-no");
 const inputCardCvv = document.getElementById("card-cvv");
+const inputCardHolderName = document.getElementById("cardholder-name");
 
 let cardTypeName = "Card Network";
 let cvcSize = 3;
@@ -284,4 +285,23 @@ inputCardNo.addEventListener("paste", (event) => {
   requestAnimationFrame(() => {
     event.target.setSelectionRange(cursorPos, cursorPos);
   });
+});
+
+const cardHolderNameValid = (text) => {
+  const regex = /^[\p{L}\p{M}\s'.-]{1,20}$/u;
+  const fullName = text.trim();
+
+  return regex.test(fullName);
+};
+
+inputCardHolderName.addEventListener("input", (event) => {
+  const rawValue = event.target.value;
+
+  const cleanValue = rawValue
+    .normalize("NFD")
+    .replace(/[^\p{L}\p{M}\s'.\u2019-]/gu, "")
+    // .trim()
+    .slice(0, 20);
+
+  event.target.value = cleanValue;
 });
