@@ -2,6 +2,7 @@ const spanTypeCard = document.getElementById("card-type");
 const inputCardNo = document.getElementById("card-no");
 const inputCardCvv = document.getElementById("card-cvv");
 const inputCardHolderName = document.getElementById("cardholder-name");
+const inputCardThru = document.getElementById("card-thru");
 
 let cardTypeName = "Card Network";
 let cvcSize = 3;
@@ -334,3 +335,36 @@ const updateThruInput = (number) => {
 
   return `${month}/${year}`;
 };
+
+inputCardThru.addEventListener("keydown", (event) => {
+  const keyValidated = isKeyAllowed(event, false);
+  if (!keyValidated) {
+    event.preventDefault();
+    return;
+  }
+
+  if (event.key === "Backspace" || event.key === "Delete") {
+    const { isNewValue, isNewCursor } = handleDelimiterBackspaceDelete(
+      event,
+      "/"
+    );
+
+    if (isNewValue) {
+      const formatValue = updateThruInput(isNewValue);
+
+      event.target.value = formatValue;
+
+      requestAnimationFrame(() => {
+        event.target.setSelectionRange(isNewCursor, isNewCursor);
+      });
+    }
+  }
+});
+
+inputCardThru.addEventListener("input", (event) => {
+  const rawValue = event.target.value;
+
+  const formatValue = updateThruInput(rawValue);
+
+  event.target.value = formatValue;
+});
