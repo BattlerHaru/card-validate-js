@@ -368,3 +368,21 @@ inputCardThru.addEventListener("input", (event) => {
 
   event.target.value = formatValue;
 });
+
+inputCardCvv.addEventListener("keydown", (event) => {
+  const keyValidated = isKeyAllowed(event, false);
+  if (!keyValidated) {
+    event.preventDefault();
+    return;
+  }
+});
+
+inputCardCvv.addEventListener("input", (event) => {
+  const rawValue = event.target.value;
+
+  event.target.placeholder = "*".repeat(cvcSize);
+
+  const formatValue = sanitizeNumber(rawValue, cvcSize);
+
+  event.target.value = formatValue;
+});
