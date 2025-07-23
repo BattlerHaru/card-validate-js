@@ -225,6 +225,46 @@ const handleCardPasteFormat = (event, pasteData) => {
   return { formattedValue, cursorPos };
 };
 
+/* TODO: Future implementation
+  Implement Luhn algorithm and getValidCard */
+const luhnCheck = (value) => {
+  let sum = 0;
+  let alternate = false;
+
+  for (let i = value.length - 1; i >= 0; i--) {
+    let digit = parseInt(value.charAt(i), 10);
+
+    if (alternate) {
+      digit *= 2;
+      if (digit > 9) {
+        digit -= 9;
+      }
+    }
+
+    sum += digit;
+    alternate = !alternate;
+  }
+
+  return sum % 10 === 0;
+};
+const getValidCard = (value) => {
+  const sanitizedValue = sanitizeNumber(value, 19);
+
+  if (!sanitizedValue) {
+    return false;
+  }
+
+  cardTypeName = detectCardType(sanitizedValue);
+
+  const isLuhn = luhnCheck(sanitizedValue);
+
+  if (!isLuhn) {
+    return false;
+  }
+
+  return true;
+};
+
 inputCardNo.addEventListener("keydown", (event) => {
   const keyValidated = isKeyAllowed(event, true);
   if (!keyValidated) {
