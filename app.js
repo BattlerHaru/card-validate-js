@@ -202,6 +202,27 @@ const adjustCursorPos = (
   return newCursorPos;
 };
 
+const handleCardPasteFormat = (event, pasteData) => {
+  const maxLength = 19;
+
+  const { selectionStart, selectionEnd, value } = event.target;
+
+  const before = value.slice(0, selectionStart);
+  const after = value.slice(selectionEnd);
+
+  const combinedSanitized = sanitizeNumber(
+    before + pasteData + after,
+    maxLength
+  );
+  const beforePasteSanitized = sanitizeNumber(before + pasteData, maxLength);
+
+  const formattedValue = updateCardInput(combinedSanitized);
+
+  const cursorPos = updateCardInput(beforePasteSanitized).length;
+
+  return { formattedValue, cursorPos };
+};
+
 inputCardNo.addEventListener("keydown", (event) => {
   const keyValidated = isKeyAllowed(event, true);
   if (!keyValidated) {
@@ -236,6 +257,29 @@ inputCardNo.addEventListener("input", (event) => {
   const cursorPos = adjustCursorPos(selectionStart, rawValue, formatValue, " ");
 
   event.target.value = formatValue;
+
+  requestAnimationFrame(() => {
+    event.target.setSelectionRange(cursorPos, cursorPos);
+  });
+});
+
+inputCardNo.addEventListener("paste", (event) => {
+  const regexNumberSpace = /[\d ]/;
+
+  const pasteData = (event.clipboardData || window.clipboardData).getData(
+    "text"
+  );
+
+  if (!regexNumberSpace.test(pasteData)) {
+    event.preventDefault();
+    return;
+  }
+
+  event.preventDefault();
+
+  const { formattedValue, cursorPos } = handleCardPasteFormat(event, pasteData);
+
+  event.target.value = formattedValue;
 
   requestAnimationFrame(() => {
     event.target.setSelectionRange(cursorPos, cursorPos);
