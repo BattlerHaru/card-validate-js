@@ -305,3 +305,32 @@ inputCardHolderName.addEventListener("input", (event) => {
 
   event.target.value = cleanValue;
 });
+
+const fixExpiryMonth = (month) => {
+  if (month === "0" || month === "1") return month;
+
+  const num = parseInt(month, 10);
+
+  if (num < 1 || month === "00") return "01";
+  if (num > 12) return "12";
+
+  return String(num).padStart(2, "0");
+};
+
+const updateThruInput = (number) => {
+  const sanitizedValue = sanitizeNumber(number, 4);
+
+  if (sanitizedValue.length === 0) {
+    return "";
+  }
+
+  const month = fixExpiryMonth(sanitizedValue.slice(0, 2));
+
+  if (sanitizedValue.length <= 2) {
+    return month;
+  }
+
+  const year = sanitizedValue.slice(2);
+
+  return `${month}/${year}`;
+};
